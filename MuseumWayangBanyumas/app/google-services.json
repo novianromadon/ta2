@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "778830937550",
+    "project_id": "museum-wayang-banyumas",
+    "storage_bucket": "museum-wayang-banyumas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778830937550:android:b4900f9f8237f881277f9f",
+        "android_client_info": {
+          "package_name": "com.novian.museumwayangbanyumas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778830937550-8644pfk43sj52s33t07485gc2a19b2nk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEWIAg7vZ77Al-qlCNxmn9FlcoYriOAW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778830937550-8644pfk43sj52s33t07485gc2a19b2nk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
