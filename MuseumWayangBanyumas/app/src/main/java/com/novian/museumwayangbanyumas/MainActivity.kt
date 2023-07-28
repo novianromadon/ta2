@@ -1,10 +1,13 @@
 package com.novian.museumwayangbanyumas
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
@@ -15,10 +18,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val imageList = ArrayList<SlideModel>() // Buat image list slider
+        // Cek Koneksi Internet
+        val connectionManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectionManager.activeNetworkInfo
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting == true) {
 
-        // imageList.add(SlideModel("String Url" or R.drawable)
-        // imageList.add(SlideModel("String Url" or R.drawable, "title") You can add title
+        } else {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Status Koneksi")
+            builder.setMessage("Harap pastikan koneksi internet Anda terhubung")
+            builder.show()
+        }
+
+        val imageList = ArrayList<SlideModel>() // Buat image list slider
 
         // Buat ganti gambar slider
         imageList.add(SlideModel(R.drawable.slide1, ScaleTypes.FIT))
@@ -28,10 +40,10 @@ class MainActivity : AppCompatActivity() {
         val imageSlider = findViewById<ImageSlider>(R.id.image_slider)
         imageSlider.setImageList(imageList)
 
-        val btnScanBarcode = findViewById<Button>(R.id.btnScanBarcode)
-        val btnKoleksiWayang = findViewById<Button>(R.id.btnKoleksiWayang)
-        val btnSejarahWayang = findViewById<Button>(R.id.btnSejarahWayang)
-        val btnTentang = findViewById<Button>(R.id.btnTentang)
+        val btnScanBarcode = findViewById<CardView>(R.id.btnScanBarcode)
+        val btnKoleksiWayang = findViewById<CardView>(R.id.btnKoleksiWayang)
+        val btnSejarahWayang = findViewById<CardView>(R.id.btnSejarahWayang)
+        val btnTentang = findViewById<CardView>(R.id.btnTentang)
 
         // Klik Barcode
         btnScanBarcode.setOnClickListener(View.OnClickListener {
@@ -56,7 +68,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, TentangActivity::class.java)
             startActivity(intent)
         })
-
-
     }
 }

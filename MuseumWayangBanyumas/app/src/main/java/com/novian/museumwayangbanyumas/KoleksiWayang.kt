@@ -2,17 +2,16 @@ package com.novian.museumwayangbanyumas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ListView
-import android.widget.Toast
+import android.util.Log
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class KoleksiWayang : AppCompatActivity() {
     // Inisialisasi
-    private lateinit var wAdapter : WayangAdapter
-    private lateinit var ref : DatabaseReference
+    var db = Firebase.firestore
     private lateinit var wayangList : ArrayList<Wayang>
     private lateinit var rvKoleksi : RecyclerView
 
@@ -20,13 +19,14 @@ class KoleksiWayang : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_koleksi_wayang)
 
-        rvKoleksi = findViewById(R.id.rv_koleksi)
+        val btnKembaliKoleksi: ImageView = findViewById(R.id.btn_kembali_koleksi)
 
+        btnKembaliKoleksi.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        rvKoleksi = findViewById(R.id.rv_koleksi)
         wayangList = ArrayList()
-        wAdapter = WayangAdapter(this, wayangList)
-        rvKoleksi.layoutManager = LinearLayoutManager(this)
-        rvKoleksi.setHasFixedSize(true)
-        rvKoleksi.adapter = wAdapter
 
         //Panggil Data Firebase
         getDataWayang()
@@ -34,32 +34,28 @@ class KoleksiWayang : AppCompatActivity() {
     }
 
     private fun getDataWayang() {
-        // Tag pada firebase
-        ref = FirebaseDatabase.getInstance().getReference("Wayang")
-        ref.addValueEventListener(object : ValueEventListener{
-            // Setiap ada perubahan data, akan membuat list baru
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
-                    wayangList.clear() // menghapus list sebelumnya, biar gak double (ketika tambah data)
-                    for (wayangSnapshot in snapshot.children){
-                        val wayang = wayangSnapshot.getValue(Wayang::class.java)
-                        if (wayang != null) {
-                            wayangList.add(wayang)
-                        }
-                    }
-                    rvKoleksi.adapter = wAdapter
-                    //val adapter = MahasiswaAdapter(applicationContext, R.layout.item_mhs, mhsList)
-                    //listMhs.adapter = adapter
+        db.collection("Wayang")
+            .get()
+            .addOnSuccessListener {
+                wayangList.clear()      // menghapus list sebelumnya, biar gak double (ketika tambah data)
+
+                for (document in it) {
+                    wayangList.add((Wayang(
+                        document.id as String,
+                        document.data.get("gambar")as String,
+                        document.data.get("nama")as String,
+                        document.data.get("deskripsi")as String,
+                    )))
+                }
+
+                var wayangAdapter = WayangAdapter(this,wayangList)
+                rvKoleksi.apply {
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = wayangAdapter
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@KoleksiWayang,error.message, Toast.LENGTH_SHORT).show()
+            .addOnFailureListener {
+                Log.v("cek", "Gagal Mengambil Data")
             }
-
-        })
     }
-
-
-
 }

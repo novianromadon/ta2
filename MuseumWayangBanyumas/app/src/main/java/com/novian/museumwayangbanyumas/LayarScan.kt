@@ -1,10 +1,13 @@
 package com.novian.museumwayangbanyumas
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.AutoFocusMode
@@ -13,40 +16,74 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LayarScan : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
-    private lateinit var wAdapter : WayangAdapter
-    private lateinit var wayangList : ArrayList<Wayang>
+    private lateinit var database: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_layar_scan)
 
+        // Cek Koneksi Internet
+        val connectionManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectionManager.activeNetworkInfo
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting == true) {
+
+        } else {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Status Koneksi")
+            builder.setMessage("Harap pastikan koneksi internet Anda terhubung")
+            builder.show()
+        }
+
         // Set Permission Camera
         setPermission()
+
+        database = FirebaseFirestore.getInstance()
 
         val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
         codeScanner = CodeScanner(this, scannerView)
 
         // Parameters (default values)
-        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
-        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-                                                      // ex. listOf(BarcodeFormat.QR_CODE)
-        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
-        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
-        codeScanner.isFlashEnabled = false // Whether to enable flash or not
+        codeScanner.camera = CodeScanner.CAMERA_BACK
+        codeScanner.formats = CodeScanner.ALL_FORMATS
+
+        codeScanner.autoFocusMode = AutoFocusMode.SAFE
+        codeScanner.scanMode = ScanMode.SINGLE
+        codeScanner.isAutoFocusEnabled = true
+        codeScanner.isFlashEnabled = false
 
         // Callbacks
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
-                //Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
                 val hasilQR = it.text // id data wayang
-                val intent = Intent(this, DetailActivity::class.java)
-                intent.putExtra("Hasil QR", hasilQR) // id data diteruskan ke halaman detail
-                startActivity(intent)
+                val docRef = database.collection("Wayang").document(hasilQR!!)
+
+                docRef.get().addOnSuccessListener { documentSnapshot ->
+                    val data = documentSnapshot.data
+                    if (data != null) {
+                        val hasilGambar = data["gambar"] as String?
+                        val hasilNama = data["nama"] as String?
+                        val hasilDeskripsi = data["deskripsi"] as String?
+
+                        val intent = Intent(this, ScanDetailActivity::class.java)
+                    /**    intent.putExtra("id", hasilQR) // id data diteruskan ke halaman detail */
+                        intent.putExtra("gambar", hasilGambar)
+                        intent.putExtra("nama", hasilNama)
+                        intent.putExtra("deskripsi", hasilDeskripsi)
+                        startActivity(intent)
+
+                    } else {
+                        val builder = AlertDialog.Builder(this)
+                        builder.setMessage("Koleksi tidak ditemukan")
+                        builder.show()
+                    }
+                }
+
             }
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
@@ -63,16 +100,6 @@ class LayarScan : AppCompatActivity() {
 
     }
 
-/**
-    fun searchList(text: String) {
-        val searchList = ArrayList<Wayang>()
-        for (wayang in wayangList) {
-            if (wayang.id?.lowercase()?.contains(text.lowercase()) == true){
-                searchList.add(wayang)
-            }
-        }
-        wAdapter.scanDataWayang(searchList)
-    } */
 
     override fun onResume() {
         super.onResume()
@@ -80,8 +107,8 @@ class LayarScan : AppCompatActivity() {
     }
 
     override fun onPause() {
+        codeScanner.releaseResources()
         super.onPause()
-        codeScanner.startPreview()
     }
 
     // Permission Camera
@@ -112,5 +139,4 @@ class LayarScan : AppCompatActivity() {
             }
         }
     }
-
 }

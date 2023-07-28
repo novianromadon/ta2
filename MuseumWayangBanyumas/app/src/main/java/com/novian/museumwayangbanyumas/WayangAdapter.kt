@@ -52,30 +52,5 @@ class WayangAdapter(private val context : Context, private var wayangList :Array
 
     override fun getItemCount(): Int = wayangList.size
 
-    fun scanDataWayang(searchList: ArrayList<Wayang>) {
-        wayangList = searchList
-    }
-
 
 }
-
-
-
-/**
-override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-    val layoutInflater : LayoutInflater = LayoutInflater.from(mCtx)
-
-    val view : View = layoutInflater.inflate(layoutResId, null)
-
-    val tvGambar : TextView = view.findViewById(R.id.tv_gambar)
-    val tvNama : TextView = view.findViewById(R.id.tv_nama)
-    val tvDeskripsi : TextView = view.findViewById(R.id.tv_deskripsi)
-
-    val mahasiswa = wayangList[position]
-
-    tvGambar.text = mahasiswa.gambar
-    tvNama.text = mahasiswa.nama
-    tvDeskripsi.text = mahasiswa.deskripsi
-
-    return view
-}*/

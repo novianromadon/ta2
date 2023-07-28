@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Museum Wayang Banyumas</string>
+    <string name="deskripsi_sejarah">Wayang berasal dari kata bahasa jawa "wewayangan" yang artinya bayang-bayang ini diwujudkan dalam bentuk boneka dan dimainkan seorang dalang didepan layar (geber).
+
+        \n\nBerangkat dari gagasan Gubernur Jawa Tengah periode 1974-1982 Soepardjo Rustam yang berkeinginan untuk mengumpulkan benda-benda bersejarah, termasuk wayang akhirnya Museum Wayang Banyumas didirikan pada tahun 1982. Sampai saat ini bangunan museum masih terus dikembangkan yang dikelola oleh Dinporabudpar (Dinas Pemuda Olahraga Kebudayaan dan Pariwisata) Kabupaten Banyumas. Museum Wayang Banyumas memiliki luas bangunan 250 m2 yang berdiri di atas tanah seluas 2000 m2 di kompleks pusat pemerintahan lama Kabupaten Banyumas. Gedung museum sebelumnya merupakan paseban bagi tamu bupati ketika pusat pemerintahan pindah ke Purwokerto.
+
+        \n\nPada awalnya Museum Wayang Banyumas bernamakan "Sendang Mas", nama Sendang Mas merupakan bentuk singkat dari Seni Pedalangan Banyumas. Nama tersebut menegaskan betapa berbedanya Wayang Gagrag Banyumasan dengan jenis wayang lainnya.
+
+        \n\nWayang Gagrag Banyumasan merupakan wayang dengan gabungan elemen dari daerah lain seperti Yogyakarta, Kedu, dan Surakarta. Karakter pada Wayang Gagrag Banyumasan diklaim menjunjung tinggi nilai kebebasan dan keterbukaan dan mengandung unsur humor yakni lelucon yang ditujukan ke jenis wayang baku yang penuh dengan peraturan. Namun pada tahun 2022 nama Museum Wayang Sendang Mas berubah nama menjadi Museum Wayang Banyumas.
+
+        \n\nMuseum Wayang Banyumas memiliki koleksi benda-benda bersejarah, seperti arca, pusaka, gamelan, kemudian wayang-wayang. Di Museum Wayang Banyumas terdapat banyak jenis wayang antara lain wayang gagrag banyumasan, wayang medayu, wayang suket, wayang krucil, dan lainnya.</string>
+    <string name="deskripsi_tentang">Aplikasi Museum Wayang Banyumas adalah aplikasi yang berguna untuk memudahkan pengunjung saat melihat koleksi wayang yang ada di Museum Wayang Banyumas.</string>
 </resources>
